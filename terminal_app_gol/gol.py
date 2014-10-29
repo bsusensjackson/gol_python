@@ -1,11 +1,10 @@
+import os
+import time
+
 class Game():
   def __init__(self, current): # array of arrays with 0/1
     self.current = current
-    self.next = ([[0,0,0,0,0],
-                  [0,0,0,0,0],
-                  [0,0,0,0,0],
-                  [0,0,0,0,0],
-                  [0,0,0,0,0]])
+    self.next = [[0 for x in xrange(5)] for x in xrange(5)]
 
   def find_neighbors(self, x, y): # needs to be refactored
     neighbors = []
@@ -30,23 +29,21 @@ class Game():
       if test == 3:
         self.next[x][y] = 1
 
-  def play(self):
+  def play(self, test=0):
+    self.display()
     for x, v in enumerate(self.current):
       for y, v in enumerate(self.current):
         self.stage_progress(x,y)
+    self.current = self.next
+    self.next = [[0 for x in xrange(5)] for x in xrange(5)]
+    time.sleep(3)
+    if test == 0:
+      self.play()
 
-g = Game([[0,0,0,0,0],
-          [0,0,0,0,0],
-          [0,1,1,1,0],
-          [0,0,0,0,0],
-          [0,0,0,0,0]])
+  def display(self):
+     for x in self.current:
+        print x
 
-g.play()
-print g.next
-
-# 5 x 5
-# (1, 2), (2,2), (3,2)
-# (2, 1), (2,2), (2,3)
 
 # Any live cell with fewer than two live neighbours dies, as if caused by under-population.
 # Any live cell with two or three live neighbours lives on to the next generation.
