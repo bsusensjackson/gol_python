@@ -2,11 +2,15 @@ import os
 import time
 
 class Game():
-  def __init__(self, current): # array of arrays with 0/1
-    self.current = current
-    self.next = [[0 for x in current[0]] for x in current]
+  def __init__(self, current, text_flag=0, game_speed=0.1): #raise text_flag for .txt
+    if text_flag == 0:
+      self.current = current
+    else:
+      self.current = Pattern(current).format
+    self.next = [[0 for x in self.current[0]] for x in self.current]
+    self.game_speed = game_speed
 
-  def find_neighbors(self, x, y): # needs to be refactored
+  def find_neighbors(self, x, y):
     neighbors = []
     for i in range((x-1), (x+2)):
         for j in range((y-1), (y+2)):
@@ -34,10 +38,9 @@ class Game():
     for x, v in enumerate(self.current):
       for y, v in enumerate(self.current[0]):
         self.stage_progress(x,y)
-    self.current = self.next
-    
+    self.current = self.next    
     self.next = [[0 for length in self.current[0]] for length in self.current] 
-    time.sleep(0.5)
+    time.sleep(self.game_speed)
     if test == 0:
       self.play()
 
@@ -50,16 +53,16 @@ class Game():
             print unichr(0x2588),
         print
 
-results = []
-with open('actual_glider.txt') as inputfile:
-    for line in inputfile:
-        line = list(line)
-        if line[-1] == '\n':
-          line.pop()
-        line = map(lambda x: int(x), line)
-        results.append(line)
+class Pattern():
+  def __init__(self, file): 
+    self.format = self.parse(file)
 
-game = Game(results)
-print len(results[0])
-game.play()
+  def parse(self, file):  
+    results = []
+    with open(file) as inputfile:
+      for line in inputfile:
+          line = [x for x in list(line) if x != '\n']
+          results.append(map(lambda x: int(x), line))   
+    return results
+
 
