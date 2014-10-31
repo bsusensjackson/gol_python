@@ -2,7 +2,7 @@ import os
 import time
 
 class Game():
-  def __init__(self, current, text_flag=0, game_speed=0.1): #raise text_flag to distinguish text files 
+  def __init__(self, current, text_flag=0, game_speed=0.1): #raise text_flag for .txt
     if text_flag == 0:
       self.current = current
     else:
@@ -62,9 +62,7 @@ class Pattern():
     with open(file) as inputfile:
       for line in inputfile:
           line = [x for x in list(line) if x != '\n']
-          results.append(map(lambda x: int(x), line))
+          results.append(map(lambda x: int(x), line))   
     return results
 
-game = Game('patterns/gosper_glider_gun.txt', 1)
-game.play()
 
